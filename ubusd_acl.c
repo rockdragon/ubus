@@ -143,6 +143,8 @@ ubusd_acl_check(struct ubus_client *cl, const char *obj,
 int
 ubusd_acl_init_client(struct ubus_client *cl, int fd)
 {
+	printf("-> [acl] ubusd_acl_init_client\n");
+
 	struct ucred cred;
 	struct passwd *pwd;
 	struct group *group;

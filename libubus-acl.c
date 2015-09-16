@@ -25,6 +25,8 @@ static struct blob_attr *acl_blob;
 
 static int acl_cmp(const void *k1, const void *k2, void *ptr)
 {
+	printf("-> [acl] acl_cmp\n");
+
 	const struct ubus_acl_key *key1 = k1;
 	const struct ubus_acl_key *key2 = k2;
 	int ret = 0;
@@ -62,6 +64,8 @@ static const struct blobmsg_policy acl_obj_policy[__ACL_OBJ_MAX] = {
 static void
 acl_add(struct blob_attr *obj)
 {
+	printf("-> [acl] acl_add\n");
+
 	struct blob_attr *tb[__ACL_OBJ_MAX];
 	struct acl_object *acl;
 
@@ -100,6 +104,8 @@ static const struct blobmsg_policy acl_policy[__ACL_POLICY_MAX] = {
 static void acl_recv_cb(struct ubus_request *req,
 			int type, struct blob_attr *msg)
 {
+	printf("-> [acl] acl_recv_cb\n");
+
 	struct blob_attr *tb[__ACL_POLICY_MAX];
 	struct blob_attr *cur;
 	int rem;
@@ -126,6 +132,8 @@ static void acl_recv_cb(struct ubus_request *req,
 
 static void acl_query(struct ubus_context *ctx)
 {
+	printf("-> [acl] acl_query\n");
+
 	ubus_invoke_async(ctx, UBUS_SYSTEM_OBJECT_ACL, "query", NULL, &acl_req);
 	acl_req.data_cb = acl_recv_cb;
 	ubus_complete_request_async(ctx, &acl_req);
@@ -134,6 +142,8 @@ static void acl_query(struct ubus_context *ctx)
 static void acl_subscribe_cb(struct ubus_context *ctx, struct ubus_event_handler *ev,
 		const char *type, struct blob_attr *msg)
 {
+	printf("-> [acl] acl_subscribe_cb\n");
+
 	if (strcmp(type, "ubus.acl.sequence"))
 		return;
 	acl_query(ctx);
@@ -141,6 +151,8 @@ static void acl_subscribe_cb(struct ubus_context *ctx, struct ubus_event_handler
 
 int ubus_register_acl(struct ubus_context *ctx)
 {
+	printf("-> [acl] ubus_register_acl\n");
+
 	int ret;
 
 	acl_event.cb = acl_subscribe_cb;
