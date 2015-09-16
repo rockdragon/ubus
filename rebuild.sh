@@ -1,0 +1,6 @@
+#!/bin/sh
+echo building..........
+make && make install
+
+echo starting ubus.........
+ubusd
