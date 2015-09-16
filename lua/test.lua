@@ -5,7 +5,9 @@ require "uloop"
 
 uloop.init()
 
-local conn = ubus.connect()
+print(arg[1])
+
+local conn = ubus.connect(arg[1])
 if not conn then
 	error("Failed to connect to ubus")
 end

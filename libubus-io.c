@@ -91,11 +91,14 @@ static int writev_retry(int fd, struct iovec *iov, int iov_len, int sock_fd)
 		if (cur_len < 0) {
 			switch(errno) {
 			case EAGAIN:
+				printf("EAGAIN\n");
 				wait_data(fd, true);
 				break;
 			case EINTR:
+				printf("-> [msg] EINTR\n");
 				break;
 			default:
+				printf("-> [msg] -1\n");
 				return -1;
 			}
 			continue;
@@ -149,6 +152,8 @@ int __hidden ubus_send_msg(struct ubus_context *ctx, uint32_t seq,
 	ret = writev_retry(ctx->sock.fd, iov, ARRAY_SIZE(iov), fd);
 	if (ret < 0)
 		ctx->sock.eof = true;
+
+	printf("-> [msg] ret: %d\n", ret);
 
 	if (fd >= 0)
 		close(fd);

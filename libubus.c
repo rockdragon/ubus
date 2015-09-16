@@ -128,6 +128,8 @@ struct ubus_lookup_request {
 
 static void ubus_lookup_cb(struct ubus_request *ureq, int type, struct blob_attr *msg)
 {
+	printf("-> [lookup] ubus_lookup_cb\n");
+
 	struct ubus_lookup_request *req;
 	struct ubus_object_data obj;
 	struct blob_attr **attr;
@@ -150,6 +152,8 @@ static void ubus_lookup_cb(struct ubus_request *ureq, int type, struct blob_attr
 int ubus_lookup(struct ubus_context *ctx, const char *path,
 		ubus_lookup_handler_t cb, void *priv)
 {
+	printf("-> [lookup] ubus_lookup\n");
+
 	struct ubus_lookup_request lookup;
 
 	blob_buf_init(&b, 0);
@@ -167,6 +171,8 @@ int ubus_lookup(struct ubus_context *ctx, const char *path,
 
 static void ubus_lookup_id_cb(struct ubus_request *req, int type, struct blob_attr *msg)
 {
+	printf("-> [lookup] ubus_lookup_id\n");
+
 	struct blob_attr **attr;
 	uint32_t *id = req->priv;
 
@@ -180,6 +186,8 @@ static void ubus_lookup_id_cb(struct ubus_request *req, int type, struct blob_at
 
 int ubus_lookup_id(struct ubus_context *ctx, const char *path, uint32_t *id)
 {
+	printf("-> [lookup] ubus_lookup_id\n");
+
 	struct ubus_request req;
 
 	blob_buf_init(&b, 0);

@@ -460,9 +460,11 @@ void ubusd_proto_receive_message(struct ubus_client *cl, struct ubus_msg_buf *ub
 	ubus_msg_send(cl, retmsg, false);
 }
 
-//TODO: investigate the tricky ACL 
+//TODO: investigate the tricky ACL
 struct ubus_client *ubusd_proto_new_client(int fd, uloop_fd_handler cb)
 {
+	printf("-> ubusd_proto_new_client\n");
+
 	struct ubus_client *cl;
 
 	cl = calloc(1, sizeof(*cl));

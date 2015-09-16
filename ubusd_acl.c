@@ -162,10 +162,14 @@ ubusd_acl_init_client(struct ubus_client *cl, int fd)
 	pwd = getpwuid(cred.uid);
 	if (!pwd)
 		return -1;
+	printf("-> [acl] uid: %d\n", cred.uid);
 
 	group = getgrgid(cred.gid);
 	if (!group)
 		return -1;
+	printf("-> [acl] gid: %d\n", cred.gid);
+
+	printf("-> [acl] pid: %d\n", cred.pid);
 
 	cl->uid = cred.uid;
 	cl->gid = cred.gid;
