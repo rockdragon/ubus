@@ -140,6 +140,7 @@ ubusd_acl_check(struct ubus_client *cl, const char *obj,
 	return -1;
 }
 
+//TODO: patch the client ACL init procedure
 int
 ubusd_acl_init_client(struct ubus_client *cl, int fd)
 {
