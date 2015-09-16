@@ -30,3 +30,16 @@
 
 # Debug files
 *.dSYM/
+
+Makefile
+CMakeCache.txt
+CMakeFiles
+*.cmake
+*.a
+*.so
+*.dylib
+examples/server
+examples/client
+ubusd
+ubus
+install_manifest.txt
