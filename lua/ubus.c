@@ -401,6 +401,8 @@ static int ubus_lua_load_methods(lua_State *L, struct ubus_method *m)
 		}
 		p[pidx].name = lua_tostring(L, -2);
 		p[pidx].type = val;
+		if(strcmp(p[pidx].name, "permission") == 0)
+			printf("-> %s : %d\n", p[pidx].name, val);
 		lua_pop(L, 1);
 		pidx++;
 	}

@@ -15,6 +15,8 @@
 
 #include "ubusd.h"
 
+#include <libubox/blobmsg_json.h>
+
 struct blob_buf b;
 static struct ubus_msg_buf *retmsg;
 static int *retmsg_data;
@@ -135,13 +137,53 @@ static int ubusd_handle_remove_object(struct ubus_client *cl, struct ubus_msg_bu
 	return 0;
 }
 
-static int ubusd_handle_add_object(struct ubus_client *cl, struct ubus_msg_buf *ub, struct blob_attr **attr)
+static const char *format_type(void *priv, struct blob_attr *attr)
+{
+	static const char * const attr_types[] = {
+		[BLOBMSG_TYPE_INT8] = "\"Boolean\"",
+		[BLOBMSG_TYPE_INT32] = "\"Integer\"",
+		[BLOBMSG_TYPE_STRING] = "\"String\"",
+		[BLOBMSG_TYPE_ARRAY] = "\"Array\"",
+		[BLOBMSG_TYPE_TABLE] = "\"Table\"",
+	};
+	const char *type = NULL;
+	int typeid;
+
+	if (blob_id(attr) != BLOBMSG_TYPE_INT32)
+		return NULL;
+
+	typeid = blobmsg_get_u32(attr);
+	if (typeid < ARRAY_SIZE(attr_types))
+		type = attr_types[typeid];
+	if (!type)
+		type = "\"(unknown)\"";
+
+	return type;
+}
+
+static int ubusd_handle_add_object(struct ubus_client *cl,
+	struct ubus_msg_buf *ub, struct blob_attr **attr)
 {
 	struct ubus_object *obj;
 
 	obj = ubusd_create_object(cl, attr);
 	if (!obj)
 		return UBUS_STATUS_INVALID_ARGUMENT;
+
+	if(attr[UBUS_ATTR_SIGNATURE]){
+			struct blob_attr *cur;
+			char *s;
+			int rem;
+
+			blob_for_each_attr(cur, attr[UBUS_ATTR_SIGNATURE], rem) {
+				s = blobmsg_format_json_with_cb(cur, false, format_type, NULL, -1);
+				printf("\t%s\n", s);
+				free(s);
+			}
+	}
+
+	printf("-> [add] ubusd_handle_add_object: %s ->\n",
+				(char*)obj->path.key);
 
 	blob_buf_init(&b, 0);
 	blob_put_int32(&b, UBUS_ATTR_OBJID, obj->id.id);
@@ -226,8 +268,8 @@ ubusd_forward_invoke(struct ubus_client *cl, struct ubus_object *obj,
 		     const char *method, struct ubus_msg_buf *ub,
 		     struct blob_attr *data)
 {
-	printf("-> [consumer] ubusd_forward_invoke: %s,fd: %d, pid:%d, gid:%d, uid:%d\n",
-	 							method, cl->sock.fd, cl->pid, cl->gid, cl->uid);
+	// printf("-> [consumer] ubusd_forward_invoke: %s,fd: %d, pid:%d, gid:%d, uid:%d, %s\n",
+	//  							method, cl->sock.fd, cl->pid, cl->gid, cl->uid, data->data);
 
 	blob_put_int32(&b, UBUS_ATTR_OBJID, obj->id.id);
 	blob_put_string(&b, UBUS_ATTR_METHOD, method);
@@ -241,7 +283,8 @@ ubusd_forward_invoke(struct ubus_client *cl, struct ubus_object *obj,
 	ubus_proto_send_msg_from_blob(obj->client, ub, UBUS_MSG_INVOKE);
 }
 
-static int ubusd_handle_invoke(struct ubus_client *cl, struct ubus_msg_buf *ub, struct blob_attr **attr)
+static int ubusd_handle_invoke(struct ubus_client *cl,
+				struct ubus_msg_buf *ub, struct blob_attr **attr)
 {
 	struct ubus_object *obj = NULL;
 	struct ubus_id *id;
@@ -254,9 +297,12 @@ static int ubusd_handle_invoke(struct ubus_client *cl, struct ubus_msg_buf *ub, 
 	if (!id)
 		return UBUS_STATUS_NOT_FOUND;
 
-	printf("-> [producer] ubusd_handle_invoke: %s\n", attr[UBUS_ATTR_METHOD]->data);
-
 	obj = container_of(id, struct ubus_object, id);
+
+	printf("-> [invoke] ubusd_handle_invoke: %s->%s, pid:%d\n",
+		(char*)obj->path.key,
+		attr[UBUS_ATTR_METHOD]->data,
+		cl->pid);
 
 	method = blob_data(attr[UBUS_ATTR_METHOD]);
 
@@ -436,8 +482,16 @@ static const ubus_cmd_cb handlers[__UBUS_MSG_LAST] = {
 	[UBUS_MSG_NOTIFY] = ubusd_handle_notify,
 };
 
-void ubusd_proto_receive_message(struct ubus_client *cl, struct ubus_msg_buf *ub)
+void ubusd_proto_receive_message(struct ubus_client *cl,
+	struct ubus_msg_buf *ub)
 {
+	printf("-> [msg] %d, %d, %d, %d, len: %d\n", ub->hdr.version,
+			ub->hdr.type, ub->hdr.seq, ub->hdr.peer, ub->len);
+
+  // char *str;
+	// str = blobmsg_format_json_indent(ub->data, true, 0);
+  // printf("-> [msg] %s\n", str);
+
 	ubus_cmd_cb cb = NULL;
 	int ret;
 
