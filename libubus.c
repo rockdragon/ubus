@@ -241,6 +241,8 @@ int ubus_register_event_handler(struct ubus_context *ctx,
 			return ret;
 	}
 
+	printf("-> [event] ubus_register_event_handler: %s\n", pattern);
+
 	/* use a second buffer, ubus_invoke() overwrites the primary one */
 	memset(&b2, 0, sizeof(b2));
 	blob_buf_init(&b2, 0);

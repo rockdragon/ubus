@@ -171,7 +171,8 @@ ubusd_acl_init_client(struct ubus_client *cl, int fd)
 
 	cl->uid = cred.uid;
 	cl->gid = cred.gid;
-
+	cl->pid = cred.pid;
+	
 	cl->group = strdup(group->gr_name);
 	cl->user = strdup(pwd->pw_name);
 

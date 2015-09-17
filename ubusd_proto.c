@@ -10,7 +10,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
 #include <arpa/inet.h>
 #include <unistd.h>
 
@@ -227,7 +226,8 @@ ubusd_forward_invoke(struct ubus_client *cl, struct ubus_object *obj,
 		     const char *method, struct ubus_msg_buf *ub,
 		     struct blob_attr *data)
 {
-	printf("-> [consumer] ubusd_forward_invoke: %s, client's fd: %d\n", method, cl->sock.fd);
+	printf("-> [consumer] ubusd_forward_invoke: %s,fd: %d, pid:%d, gid:%d, uid:%d\n",
+	 							method, cl->sock.fd, cl->pid, cl->gid, cl->uid);
 
 	blob_put_int32(&b, UBUS_ATTR_OBJID, obj->id.id);
 	blob_put_string(&b, UBUS_ATTR_METHOD, method);

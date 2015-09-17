@@ -42,6 +42,8 @@ struct ubus_client {
 
 	uid_t uid;
 	gid_t gid;
+	pid_t pid;
+	
 	char *user;
 	char *group;
 
