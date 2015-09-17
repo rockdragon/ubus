@@ -153,7 +153,7 @@ static const char *format_type(void *priv, struct blob_attr *attr)
 		return NULL;
 
 	typeid = blobmsg_get_u32(attr);
-	printf("-> [typeid] %d\n", typeid);
+	// printf("-> [name] %s\n", blobmsg_name(attr));
 	if (typeid < ARRAY_SIZE(attr_types))
 		type = attr_types[typeid];
 	if (!type)
@@ -171,17 +171,17 @@ static int ubusd_handle_add_object(struct ubus_client *cl,
 	if (!obj)
 		return UBUS_STATUS_INVALID_ARGUMENT;
 
-	if(attr[UBUS_ATTR_SIGNATURE]){
-			struct blob_attr *cur;
-			char *s;
-			int rem;
-
-			blob_for_each_attr(cur, attr[UBUS_ATTR_SIGNATURE], rem) {
-				s = blobmsg_format_json_with_cb(cur, false, format_type, NULL, -1);
-				printf("\t%s\n", s);
-				free(s);
-			}
-	}
+	// if(attr[UBUS_ATTR_SIGNATURE]){
+	// 		struct blob_attr *cur;
+	// 		char *s;
+	// 		int rem;
+	//
+	// 		blob_for_each_attr(cur, attr[UBUS_ATTR_SIGNATURE], rem) {
+	// 			s = blobmsg_format_json_with_cb(cur, false, format_type, NULL, -1);
+	// 			printf("\t%s\n", s);
+	// 			free(s);
+	// 		}
+	// }
 
 	printf("-> [add] ubusd_handle_add_object: %s ->\n",
 				(char*)obj->path.key);
@@ -304,6 +304,18 @@ static int ubusd_handle_invoke(struct ubus_client *cl,
 		(char*)obj->path.key,
 		attr[UBUS_ATTR_METHOD]->data,
 		cl->pid);
+
+	if(attr[UBUS_ATTR_SIGNATURE]){
+			struct blob_attr *cur;
+			char *s;
+			int rem;
+
+			blob_for_each_attr(cur, attr[UBUS_ATTR_SIGNATURE], rem) {
+				s = blobmsg_format_json_with_cb(cur, false, format_type, NULL, -1);
+				printf("\t%s\n", s);
+				free(s);
+			}
+	}
 
 	method = blob_data(attr[UBUS_ATTR_METHOD]);
 
