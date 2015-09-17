@@ -394,8 +394,8 @@ static int ubus_lua_load_methods(lua_State *L, struct ubus_method *m)
 		/* check if the policy is valid */
 		if ((lua_type(L, -2) != LUA_TSTRING) ||
 				(lua_type(L, -1) != LUA_TNUMBER) ||
-				(val < 0) ||
-				(val > BLOBMSG_TYPE_LAST)) {
+				(val < 0) /*||
+				(val > BLOBMSG_TYPE_LAST)*/) {
 			lua_pop(L, 1);
 			continue;
 		}

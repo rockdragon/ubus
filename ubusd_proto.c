@@ -153,6 +153,7 @@ static const char *format_type(void *priv, struct blob_attr *attr)
 		return NULL;
 
 	typeid = blobmsg_get_u32(attr);
+	printf("-> [typeid] %d\n", typeid);
 	if (typeid < ARRAY_SIZE(attr_types))
 		type = attr_types[typeid];
 	if (!type)
