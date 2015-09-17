@@ -91,14 +91,14 @@ static int writev_retry(int fd, struct iovec *iov, int iov_len, int sock_fd)
 		if (cur_len < 0) {
 			switch(errno) {
 			case EAGAIN:
-				printf("EAGAIN\n");
+				// printf("EAGAIN\n");
 				wait_data(fd, true);
 				break;
 			case EINTR:
-				printf("-> [msg] EINTR\n");
+				// printf("-> [msg] EINTR\n");
 				break;
 			default:
-				printf("-> [msg] -1\n");
+				// printf("-> [msg] -1\n");
 				return -1;
 			}
 			continue;
@@ -128,7 +128,7 @@ static int writev_retry(int fd, struct iovec *iov, int iov_len, int sock_fd)
 int __hidden ubus_send_msg(struct ubus_context *ctx, uint32_t seq,
 			   struct blob_attr *msg, int cmd, uint32_t peer, int fd)
 {
-	printf("-> ubus_send_msg\n");
+	// printf("-> ubus_send_msg\n");
 
 	struct ubus_msghdr hdr;
 	struct iovec iov[2] = {
@@ -153,7 +153,7 @@ int __hidden ubus_send_msg(struct ubus_context *ctx, uint32_t seq,
 	if (ret < 0)
 		ctx->sock.eof = true;
 
-	printf("-> [msg] ret: %d\n", ret);
+	// printf("-> [msg] ret: %d\n", ret);
 
 	if (fd >= 0)
 		close(fd);
@@ -357,7 +357,7 @@ ubus_refresh_state(struct ubus_context *ctx)
 
 int ubus_reconnect(struct ubus_context *ctx, const char *path)
 {
-	printf("-> ubus_reconnect %s\n", path);
+	// printf("-> ubus_reconnect %s\n", path);
 	struct {
 		struct ubus_msghdr hdr;
 		struct blob_attr data;

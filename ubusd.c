@@ -345,7 +345,7 @@ static void server_cb(struct uloop_fd *fd, unsigned int events)
 
 static struct uloop_fd server_fd = {
 	.cb = server_cb,
-};
+}; 
 
 static int usage(const char *progname)
 {
@@ -384,7 +384,7 @@ int main(int argc, char **argv)
 	}
 
 	unlink(ubus_socket);
-	umask(0111);
+	umask(0000);
 	server_fd.fd = usock(USOCK_UNIX | USOCK_SERVER | USOCK_NONBLOCK, ubus_socket, NULL);
 	if (server_fd.fd < 0) {
 		perror("usock");

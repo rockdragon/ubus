@@ -52,7 +52,7 @@ static void __ubus_process_req_data(struct ubus_request *req)
 int __hidden ubus_start_request(struct ubus_context *ctx, struct ubus_request *req,
 				struct blob_attr *msg, int cmd, uint32_t peer)
 {
-	printf("-> ubus_start_request\n");
+	// printf("-> ubus_start_request\n");
 
 	memset(req, 0, sizeof(*req));
 
@@ -79,7 +79,7 @@ void ubus_abort_request(struct ubus_context *ctx, struct ubus_request *req)
 
 void ubus_complete_request_async(struct ubus_context *ctx, struct ubus_request *req)
 {
-	printf("-> ubus_complete_request_async\n");
+	// printf("-> ubus_complete_request_async\n");
 
 	if (!list_empty(&req->list))
 		return;
@@ -132,7 +132,7 @@ static int64_t get_time_msec(void)
 int ubus_complete_request(struct ubus_context *ctx, struct ubus_request *req,
 			  int req_timeout)
 {
-	printf("-> ubus_complete_request\n");
+	// printf("-> ubus_complete_request\n");
 
 	ubus_complete_handler_t complete_cb = req->complete_cb;
 	bool registered = ctx->sock.registered;
@@ -199,7 +199,7 @@ void ubus_complete_deferred_request(struct ubus_context *ctx, struct ubus_reques
 int ubus_send_reply(struct ubus_context *ctx, struct ubus_request_data *req,
 		    struct blob_attr *msg)
 {
-	printf("-> ubus_send_reply\n");
+	// printf("-> ubus_send_reply\n");
 
 	int ret;
 

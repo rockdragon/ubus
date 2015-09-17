@@ -89,6 +89,8 @@ ubus_queue_msg(struct ubus_context *ctx, struct ubus_msghdr_buf *buf)
 void __hidden
 ubus_process_msg(struct ubus_context *ctx, struct ubus_msghdr_buf *buf, int fd)
 {
+	// printf("-> [msg] ubus_process_msg\n");
+
 	switch(buf->hdr.type) {
 	case UBUS_MSG_STATUS:
 	case UBUS_MSG_DATA:
@@ -128,7 +130,7 @@ struct ubus_lookup_request {
 
 static void ubus_lookup_cb(struct ubus_request *ureq, int type, struct blob_attr *msg)
 {
-	printf("-> [lookup] ubus_lookup_cb\n");
+	// printf("-> [lookup] ubus_lookup_cb\n");
 
 	struct ubus_lookup_request *req;
 	struct ubus_object_data obj;
@@ -152,7 +154,7 @@ static void ubus_lookup_cb(struct ubus_request *ureq, int type, struct blob_attr
 int ubus_lookup(struct ubus_context *ctx, const char *path,
 		ubus_lookup_handler_t cb, void *priv)
 {
-	printf("-> [lookup] ubus_lookup\n");
+	// printf("-> [lookup] ubus_lookup\n");
 
 	struct ubus_lookup_request lookup;
 
@@ -171,7 +173,7 @@ int ubus_lookup(struct ubus_context *ctx, const char *path,
 
 static void ubus_lookup_id_cb(struct ubus_request *req, int type, struct blob_attr *msg)
 {
-	printf("-> [lookup] ubus_lookup_id\n");
+	// printf("-> [lookup] ubus_lookup_id\n");
 
 	struct blob_attr **attr;
 	uint32_t *id = req->priv;
@@ -186,7 +188,7 @@ static void ubus_lookup_id_cb(struct ubus_request *req, int type, struct blob_at
 
 int ubus_lookup_id(struct ubus_context *ctx, const char *path, uint32_t *id)
 {
-	printf("-> [lookup] ubus_lookup_id\n");
+	// printf("-> [lookup] ubus_lookup_id\n");
 
 	struct ubus_request req;
 
@@ -281,7 +283,7 @@ static void ubus_default_connection_lost(struct ubus_context *ctx)
 
 int ubus_connect_ctx(struct ubus_context *ctx, const char *path)
 {
-	printf("-> ubus_connect_ctx\n");
+	// printf("-> ubus_connect_ctx\n");
 	memset(ctx, 0, sizeof(*ctx));
 
 	ctx->sock.fd = -1;
@@ -346,7 +348,7 @@ void ubus_auto_connect(struct ubus_auto_conn *conn)
 
 struct ubus_context *ubus_connect(const char *path)
 {
-	printf("-> ubus_connect\n");
+	// printf("-> ubus_connect\n");
 	struct ubus_context *ctx;
 
 	ctx = calloc(1, sizeof(*ctx));

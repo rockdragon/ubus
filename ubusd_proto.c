@@ -227,6 +227,8 @@ ubusd_forward_invoke(struct ubus_client *cl, struct ubus_object *obj,
 		     const char *method, struct ubus_msg_buf *ub,
 		     struct blob_attr *data)
 {
+	printf("-> [consumer] ubusd_forward_invoke: %s, client's fd: %d\n", method, cl->sock.fd);
+
 	blob_put_int32(&b, UBUS_ATTR_OBJID, obj->id.id);
 	blob_put_string(&b, UBUS_ATTR_METHOD, method);
 	if (cl->user)
@@ -251,6 +253,8 @@ static int ubusd_handle_invoke(struct ubus_client *cl, struct ubus_msg_buf *ub, 
 	id = ubus_find_id(&objects, blob_get_u32(attr[UBUS_ATTR_OBJID]));
 	if (!id)
 		return UBUS_STATUS_NOT_FOUND;
+
+	printf("-> [producer] ubusd_handle_invoke: %s\n", attr[UBUS_ATTR_METHOD]->data);
 
 	obj = container_of(id, struct ubus_object, id);
 
@@ -463,7 +467,7 @@ void ubusd_proto_receive_message(struct ubus_client *cl, struct ubus_msg_buf *ub
 //TODO: investigate the tricky ACL
 struct ubus_client *ubusd_proto_new_client(int fd, uloop_fd_handler cb)
 {
-	printf("-> ubusd_proto_new_client\n");
+	//printf("-> ubusd_proto_new_client\n");
 
 	struct ubus_client *cl;
 

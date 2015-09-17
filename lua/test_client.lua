@@ -37,7 +37,7 @@ end
   --print("[total]:", os.time() - st, "seconds")
 	--print("[aver]:", (os.time() - st) / i, "second")
 
-	local status = {conn:call("test", "hello1", { msg = "eth0" })}
+	 local status = {conn:call("test", "hello1", { msg = "eth0" })}
 
 	for a = 1, #status do
 		for k, v in pairs(status[a]) do
