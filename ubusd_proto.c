@@ -147,21 +147,22 @@ static int ubusd_handle_add_object(struct ubus_client *cl,
 		return UBUS_STATUS_INVALID_ARGUMENT;
 
 	if(attr[UBUS_ATTR_SIGNATURE]){
-			struct blob_attr *cur, *pos;
+			struct blob_attr *cur;
+			struct blob_attr *pos;
 			const char *s;
-			int rem, rec;
+			int rem;
+			int rec;
 
-      //TODO: retrieve current method permission
+      //retrieve current method permission
 			blob_for_each_attr(cur, attr[UBUS_ATTR_SIGNATURE], rem) {
 				if(blob_id(cur) == BLOBMSG_TYPE_TABLE){
-					__blob_for_each_attr(pos, cur, rec){
-						printf("BLOBMSG_TYPE_TABLE %d\n", rec);
-						const s = blobmsg_name(pos);
-						printf("-> [arg] %s\n", s);
-						if(strcmp(s, "permission") == 0){
-								int permission = blobmsg_get_u32(pos);
-								printf("-> [permission] %d \n", permission);
-						}
+					rec = blobmsg_data_len(cur);
+					__blob_for_each_attr(pos, blobmsg_data(cur), rec){
+							s = blobmsg_name(pos);
+							if(strcmp(s, "permission") == 0){
+									int permission = blobmsg_get_u32(pos);
+									printf("-> [permission] %d \n", permission);
+							}
 					}
 				}
 			}
