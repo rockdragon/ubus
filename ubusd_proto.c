@@ -160,8 +160,12 @@ static int ubusd_handle_add_object(struct ubus_client *cl,
 					__blob_for_each_attr(pos, blobmsg_data(cur), rec){
 							s = blobmsg_name(pos);
 							if(strcmp(s, "permission") == 0){
-									int permission = blobmsg_get_u32(pos);
-									printf("-> [permission] %d \n", permission);
+								   printf("-> [permission] exists\n");
+								  if(blob_id(blobmsg_data(pos)) == BLOBMSG_TYPE_ARRAY){
+											printf("-> [permission] ARRAY\n");
+									}
+ 								// 	int permission = blobmsg_get_u32(pos);
+									// printf("-> [permission] %d \n", permission);
 							}
 					}
 				}

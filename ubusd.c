@@ -110,6 +110,7 @@ static int ubus_msg_writev(int fd, struct ubus_msg_buf *ub, int offset)
 	}
 
 	if (offset < sizeof(ub->hdr)) {
+		printf("-> [server] sendmsg\n");
 		iov[0].iov_base = ((char *) &ub->hdr) + offset;
 		iov[0].iov_len = sizeof(ub->hdr) - offset;
 		iov[1].iov_base = (char *) ub->data;
@@ -117,6 +118,7 @@ static int ubus_msg_writev(int fd, struct ubus_msg_buf *ub, int offset)
 
 		return sendmsg(fd, &msghdr, 0);
 	} else {
+		printf("-> [server] write\n");
 		offset -= sizeof(ub->hdr);
 		return write(fd, ((char *) ub->data) + offset, ub->len - offset);
 	}
@@ -345,7 +347,7 @@ static void server_cb(struct uloop_fd *fd, unsigned int events)
 
 static struct uloop_fd server_fd = {
 	.cb = server_cb,
-}; 
+};
 
 static int usage(const char *progname)
 {

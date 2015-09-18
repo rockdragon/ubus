@@ -17,7 +17,7 @@ local my_method = {
 		hello = 1,
 		hello1 = {
 			function(req)
-			end, {id = "fail", permission = {3}}
+			end, {id = "fail"}, { 3 }
 		},
 	},
 	test = {
@@ -28,14 +28,14 @@ local my_method = {
 				for k, v in pairs(msg) do
 					print("key=" .. k .. " value=" .. tostring(v))
 				end
-			end, {id = ubus.INT32, msg = ubus.STRING, permission = {256}}
+			end, {id = ubus.INT32, msg = ubus.STRING}, {256}
 		},
 		hello1 = {
 			function(req)
 				conn:reply(req, {message="foo1"});
 				conn:reply(req, {message="foo2"});
 				print("Call to function 'hello1'")
-			end, {id = ubus.INT32, msg = ubus.STRING, permission = {1024}}
+			end, {id = ubus.INT32, msg = ubus.STRING}, {1024}
 		}
 	}
 }
